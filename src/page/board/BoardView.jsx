@@ -47,11 +47,7 @@ export function BoardView() {
     axios
       .delete(`/api/board/${id}`)
       .then(() => {
-        toast({
-          status: "success",
-          description: `${id}번 게시물이 삭제 되었습니다.`,
-          position: "top",
-        });
+        myToastMethod("success", `${id}번 게시물 정상 삭제되었습니다.`);
         navigate("/");
       })
       .catch(() => {
@@ -62,6 +58,14 @@ export function BoardView() {
         });
       })
       .finally(() => onClose());
+
+    function myToastMethod(status, description) {
+      toast({
+        status: status,
+        description: description,
+        position: "top",
+      });
+    }
   }
 
   /* DB의 값이 state 에 넘어오기 전에 랜더링 하여 null 오류 발생하는 경우 해결법*/
@@ -99,7 +103,14 @@ export function BoardView() {
             <Input type={"datetime-local"} value={board.inserted} readOnly />
           </FormControl>
         </Box>
-        <Button colorScheme={"purple"}>수정</Button>
+        <Button
+          colorScheme={"purple"}
+          onClick={() => {
+            navigate(`/edit/${board.id}`);
+          }}
+        >
+          수정
+        </Button>
         <Button colorScheme={"red"} onClick={onOpen}>
           삭제
         </Button>
