@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -8,14 +8,29 @@ import {
   Input,
   Spinner,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 
 export function BoardView() {
   // dynamic segment
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const toast = useToast();
+  const navigate = useNavigate();
   useEffect(() => {
-    axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
+    axios
+      .get(`/api/board/${id}`)
+      .then((res) => setBoard(res.data))
+      .catch((err) => {
+        if (err.response.status === 404) {
+          toast({
+            status: "error",
+            description: "해당 게시물이 존재하지 않습니다.",
+            position: "top",
+          });
+          navigate("/");
+        }
+      });
   }, []);
 
   /* DB의 값이 state 에 넘어오기 전에 랜더링 하여 null 오류 발생하는 경우 해결법*/
