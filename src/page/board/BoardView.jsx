@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
+  Button,
   FormControl,
   FormLabel,
   Input,
@@ -32,6 +33,10 @@ export function BoardView() {
         }
       });
   }, []);
+
+  function handleClickRemove() {
+    axios.delete(`/api/board/${id}`);
+  }
 
   /* DB의 값이 state 에 넘어오기 전에 랜더링 하여 null 오류 발생하는 경우 해결법*/
   // board 가 null 일떄 return null or return <Spinner /> -> 로딩 느낌나게 함.
@@ -68,6 +73,10 @@ export function BoardView() {
             <Input type={"datetime-local"} value={board.inserted} readOnly />
           </FormControl>
         </Box>
+        <Button colorScheme={"purple"}>수정</Button>
+        <Button colorScheme={"red"} onClick={handleClickRemove}>
+          삭제
+        </Button>
       </Box>
     </Box>
   );
