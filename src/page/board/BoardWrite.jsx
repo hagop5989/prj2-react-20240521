@@ -34,8 +34,28 @@ export function BoardWrite() {
         });
         navigate("/"); /* home 으로 이동 */
       })
-      .catch()
+      .catch((e) => {
+        const code = e.response.status;
+        if (code === 400) {
+          toast({
+            status: "error",
+            description: "등록되지 않았습니다.입력 내용을 확인하세요.",
+            position: "top",
+          });
+        }
+      })
       .finally();
+  }
+
+  let disableSaveButton = false;
+  if (title.trim().length === 0) {
+    disableSaveButton = true;
+  }
+  if (content.trim().length === 0) {
+    disableSaveButton = true;
+  }
+  if (writer.trim().length === 0) {
+    disableSaveButton = true;
   }
   return (
     <Box>
@@ -58,7 +78,11 @@ export function BoardWrite() {
           <Input onChange={(e) => setWriter(e.target.value)} />
         </FormControl>
         <Box>
-          <Button colorScheme={"blue"} onClick={handleSaveClick}>
+          <Button
+            isDisabled={disableSaveButton}
+            colorScheme={"blue"}
+            onClick={handleSaveClick}
+          >
             저장
           </Button>
         </Box>
