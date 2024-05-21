@@ -10,7 +10,7 @@ export function Home() {
         <Navbar />
       </Box>
       <Box>
-        <Outlet /> {/* Board Write */}
+        <Outlet />
       </Box>
     </Box>
   );
