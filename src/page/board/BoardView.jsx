@@ -48,6 +48,7 @@ export function BoardView() {
       .delete(`/api/board/${id}`)
       .then(() => {
         myToastMethod("success", `${id}번 게시물 정상 삭제되었습니다.`);
+
         navigate("/");
       })
       .catch(() => {

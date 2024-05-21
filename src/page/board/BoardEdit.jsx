@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -7,19 +7,51 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Textarea,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 
 export function BoardEdit() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const toast = useToast();
+  const navigate = useNavigate();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   useEffect(() => {
     axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
   }, []);
 
   function handleClickSave() {
-    axios.put("/api/board/edit", board);
+    axios
+      .put("/api/board/edit", board)
+      .then(() => {
+        toast({
+          status: "success",
+          description: `${board.id}번 게시물이 수정 되었습니다.`,
+          position: "top",
+        });
+        navigate(`/board/${board.id}`);
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          toast({
+            status: "error",
+            description:
+              "게시물이 수정되지 않았습니다. 작성 내용을 확인해주세요.",
+          });
+        }
+      })
+      .finally(() => {
+        onClose();
+      });
   }
 
   if (board === null) {
@@ -58,10 +90,25 @@ export function BoardEdit() {
             />
           </FormControl>
         </Box>
-        <Button onClick={handleClickSave} colorScheme={"blue"}>
+        <Button onClick={onOpen} colorScheme={"blue"}>
           저장
         </Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>수정</ModalHeader>
+          <ModalBody>
+            수정하시겠습니까?
+            <ModalFooter>
+              <Button onClick={onClose}>취소</Button>
+              <Button colorScheme={"blue"} onClick={handleClickSave}>
+                확인
+              </Button>
+            </ModalFooter>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
