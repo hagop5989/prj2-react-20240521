@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPen } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
-  // [{ id : 5, title : "제목1", writer: "누구1"}]
 
+  // mount 될때 하는일 - 상태가 변경될때 useEffect 로 갱신
+  useEffect(() => {
+    axios.get("/api/board/list").then((res) => setBoardList(res.data));
+  }, []);
   return (
     <Box>
       <Box>게시물 목록</Box>
