@@ -7,8 +7,15 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Textarea,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 
@@ -18,6 +25,8 @@ export function BoardView() {
   const [board, setBoard] = useState(null);
   const toast = useToast();
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     axios
       .get(`/api/board/${id}`)
@@ -74,10 +83,26 @@ export function BoardView() {
           </FormControl>
         </Box>
         <Button colorScheme={"purple"}>수정</Button>
-        <Button colorScheme={"red"} onClick={handleClickRemove}>
+        <Button colorScheme={"red"} onClick={onOpen}>
           삭제
         </Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay>
+          <ModalContent>
+            <ModalHeader>삭제</ModalHeader>
+            <ModalBody>
+              삭제하시겠습니까?
+              <ModalFooter>
+                <Button onClick={onClose}>취소</Button>
+                <Button colorScheme={"red"} onClick={handleClickRemove}>
+                  확인
+                </Button>
+              </ModalFooter>
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
     </Box>
   );
 }
