@@ -4,6 +4,12 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   useDisclosure,
   useToast,
@@ -83,14 +89,28 @@ export function MemberInfo() {
           </FormControl>
         </Box>
         <Button colorScheme={"green"}>수정</Button>
-        <Button
-          colorScheme={"red"}
-          isLoading={isLoading}
-          onClick={handleClickRemove}
-        >
+        <Button colorScheme={"red"} onClick={onOpen}>
           탈퇴
         </Button>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay>
+          <ModalContent>
+            <ModalHeader>탈퇴</ModalHeader>
+            <ModalBody>탈퇴하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Button onClick={onClose}>취소</Button>
+              <Button
+                isLoading={isLoading}
+                colorScheme={"red"}
+                onClick={handleClickRemove}
+              >
+                확인
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
     </Box>
   );
 }
