@@ -54,21 +54,43 @@ export function MemberSignup() {
 
   function handleCheckEmail() {
     axios
-      .get(`/api/member/check?email="${email}`)
-      .then((res) => {
-        // 사용 할 수 있는 이메일
+      .get(`/api/member/check?email=${email}`)
+      .then(() => {
         toast({
-          status: "info",
-          description: " 사용 가능한 이메일입니다",
+          status: "warning",
+          description: "사용할 수 없는 이메일입니다.",
           position: "top",
         });
-      })
-      // 사용 불가능 이메일
+      }) // 이미 있는 이메일 (사용 못함)
       .catch((err) => {
         if (err.response.status === 404) {
+          // 사용할 수 있는 이메일
           toast({
             status: "info",
-            description: " 사용 불가능한 이메일입니다",
+            description: "사용할 수 있는 이메일입니다.",
+            position: "top",
+          });
+        }
+      })
+      .finally();
+  }
+
+  function handleCheckNickName() {
+    axios
+      .get(`/api/member/check?nickName=${nickName}`)
+      .then(() => {
+        toast({
+          status: "warning",
+          description: "사용할 수 없는 닉네임입니다.",
+          position: "top",
+        });
+      }) // 이미 있는 닉네임 (사용 못함)
+      .catch((err) => {
+        if (err.response.status === 404) {
+          // 사용할 수 있는 닉네임
+          toast({
+            status: "info",
+            description: "사용할 수 있는 닉네임입니다.",
             position: "top",
           });
         }
@@ -86,7 +108,11 @@ export function MemberSignup() {
             <InputGroup>
               <Input onChange={(e) => setEmail(e.target.value)} />
               <InputRightElement w={"75px"} mr={1}>
-                <Button size={"sm"} onClick={handleCheckEmail}>
+                <Button
+                  colorScheme={"green"}
+                  size={"sm"}
+                  onClick={handleCheckEmail}
+                >
                   중복 확인
                 </Button>
               </InputRightElement>
@@ -102,7 +128,18 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>별명</FormLabel>
-            <Input onChange={(e) => setNickName(e.target.value)} />
+            <InputGroup>
+              <Input onChange={(e) => setNickName(e.target.value)} />
+              <InputRightElement w={"75px"} mr={1}>
+                <Button
+                  colorScheme={"green"}
+                  size={"sm"}
+                  onClick={handleCheckNickName}
+                >
+                  중복 확인
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
         </Box>
         <Box>
