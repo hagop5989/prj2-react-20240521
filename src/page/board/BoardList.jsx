@@ -19,7 +19,7 @@ export function BoardList() {
       <Box>
         <Table>
           <Thead>
-            <Tr>
+            <Tr bgColor={"gray.200"}>
               <Th>#</Th>
               <Th>TITLE</Th>
               <Th>
