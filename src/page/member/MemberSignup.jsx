@@ -30,7 +30,7 @@ export function MemberSignup() {
     setIsLoading(true);
     axios
       .post("/api/member/signup", { email, password, nickName })
-      .then((res) => {
+      .then(() => {
         toast({
           status: "success",
           description: "회원 가입이 완료되었습니다.",
@@ -146,6 +146,7 @@ export function MemberSignup() {
             <InputGroup>
               <Input
                 type={"email"}
+                value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setIsCheckedEmail(false);
@@ -192,8 +193,9 @@ export function MemberSignup() {
             <FormLabel>별명</FormLabel>
             <InputGroup>
               <Input
+                value={nickName}
                 onChange={(e) => {
-                  setNickName(e.target.value);
+                  setNickName(e.target.value.trim());
                   setIsCheckedNickName(false);
                 }}
               />

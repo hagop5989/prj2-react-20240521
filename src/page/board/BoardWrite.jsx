@@ -23,25 +23,25 @@ export function BoardWrite() {
     setLoading(true);
     axios
       .post("/api/board/add", {
-        title: title,
-        content: content,
-        writer: writer,
+        title,
+        content,
+        writer,
       })
       .then(() => {
         toast({
           description: "새 글이 등록되었습니다.",
           status: "success",
           position: "top",
-          duration: 1000,
         });
-        navigate("/"); /* home 으로 이동 */
+        navigate("/");
       })
       .catch((e) => {
         const code = e.response.status;
+
         if (code === 400) {
           toast({
             status: "error",
-            description: "등록되지 않았습니다.입력 내용을 확인하세요.",
+            description: "등록되지 않았습니다. 입력한 내용을 확인하세요.",
             position: "top",
           });
         }
@@ -59,6 +59,7 @@ export function BoardWrite() {
   if (writer.trim().length === 0) {
     disableSaveButton = true;
   }
+
   return (
     <Box>
       <Box>글 작성 화면</Box>
@@ -69,16 +70,18 @@ export function BoardWrite() {
             <Input onChange={(e) => setTitle(e.target.value)} />
           </FormControl>
         </Box>
-      </Box>
-      <FormControl>
-        <FormLabel>본문</FormLabel>
-        <Textarea onChange={(e) => setContent(e.target.value)} />
-      </FormControl>
-      <Box>
-        <FormControl>
-          <FormLabel>작성자</FormLabel>
-          <Input onChange={(e) => setWriter(e.target.value)} />
-        </FormControl>
+        <Box>
+          <FormControl>
+            <FormLabel>본문</FormLabel>
+            <Textarea onChange={(e) => setContent(e.target.value)} />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>작성자</FormLabel>
+            <Input onChange={(e) => setWriter(e.target.value)} />
+          </FormControl>
+        </Box>
         <Box>
           <Button
             isLoading={loading}
