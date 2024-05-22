@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import { Box, Spinner, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function MemberList() {
   const [memberList, setMemberList] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios.get("/api/member/list").then((res) => {
       setMemberList(res.data);
     });
   }, []);
+
   /*빈 dependency 가 있어야 1번만 실행됨 */
   if (memberList.length === 0) {
     return <Spinner />;
   }
+
   return (
     <Box>
       <Box>회원목록</Box>
@@ -26,7 +31,12 @@ export function MemberList() {
           </Tr>
           <Tbody>
             {memberList.map((member) => (
-              <Tr key={member.id}>
+              <Tr
+                cursor={"pointer"}
+                _hover={{ bgColor: "gray.200 " }}
+                onClick={() => navigate(`/member/${member.id}`)}
+                key={member.id}
+              >
                 <Td>{member.id}</Td>
                 <Td>{member.nickName}</Td>
                 <Td>{member.email}</Td>
