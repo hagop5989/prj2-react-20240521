@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -17,6 +18,7 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
   const [isLoading, setIsLoading] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -98,6 +100,8 @@ export function MemberSignup() {
       .finally();
   }
 
+  const isCheckedPassword = password === passwordCheck;
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -123,6 +127,17 @@ export function MemberSignup() {
           <FormControl>
             <FormLabel>암호</FormLabel>
             <Input onChange={(e) => setPassword(e.target.value)} />
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>암호확인</FormLabel>
+            <Input onChange={(e) => setPasswordCheck(e.target.value)} />
+            {isCheckedPassword || (
+              <FormHelperText color={"red.300"}>
+                암호가 일치하지 않습니다
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
