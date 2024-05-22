@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Box, Spinner, Table, Tbody, Td, Th, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -23,12 +32,14 @@ export function MemberList() {
       <Box>회원목록</Box>
       <Box>
         <Table>
-          <Tr>
-            <Th>#</Th>
-            <Th>별명</Th>
-            <Th>이메일</Th>
-            <Th>가입일시</Th>
-          </Tr>
+          <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>별명</Th>
+              <Th>이메일</Th>
+              <Th>가입일시</Th>
+            </Tr>
+          </Thead>
           <Tbody>
             {memberList.map((member) => (
               <Tr
