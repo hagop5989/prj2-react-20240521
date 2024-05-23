@@ -16,17 +16,25 @@ export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const account = useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
-  const account = useContext(LoginContext);
 
   function handleSaveClick() {
     setLoading(true);
     axios
-      .post("/api/board/add", {
-        title,
-        content,
-      })
+      .post(
+        "/api/board/add",
+        {
+          title,
+          content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      )
       .then(() => {
         toast({
           description: "새 글이 등록되었습니다.",
@@ -56,9 +64,6 @@ export function BoardWrite() {
   if (content.trim().length === 0) {
     disableSaveButton = true;
   }
-  // if (writer.trim().length === 0) {
-  //   disableSaveButton = true;
-  // }
 
   return (
     <Box>
