@@ -91,7 +91,12 @@ export function MemberInfo() {
             <Input value={member.signupDateAndTime} readOnly={true}></Input>
           </FormControl>
         </Box>
-        <Button colorScheme={"green"}>수정</Button>
+        <Button
+          colorScheme={"green"}
+          onClick={() => navigate(`/member/edit/${member.id}`)}
+        >
+          수정
+        </Button>
         <Button colorScheme={"red"} onClick={onOpen}>
           탈퇴
         </Button>
@@ -103,7 +108,10 @@ export function MemberInfo() {
             <ModalBody>
               <FormControl>
                 <FormLabel>암호</FormLabel>
-                <Input onChange={(e) => setPassword(e.target.value)}></Input>
+                <Input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                ></Input>
               </FormControl>
             </ModalBody>
             <ModalFooter>
