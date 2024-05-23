@@ -31,7 +31,7 @@ export function Navbar() {
         {account.isLoggedIn() && (
           <Box>
             <FontAwesomeIcon icon={faUser} />
-            {account.nickName}님 로그인
+            {account.nickName} 님 로그인
           </Box>
         )}
         {account.isLoggedIn() || (
