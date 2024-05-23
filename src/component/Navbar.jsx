@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Spacer } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { LoginContext } from "./LoginProvider.jsx";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -25,7 +27,13 @@ export function Navbar() {
             글쓰기
           </Box>
         )}
-
+        <Spacer />
+        {account.isLoggedIn() && (
+          <Box>
+            <FontAwesomeIcon icon={faUser} />
+            {account.nickName}님 로그인
+          </Box>
+        )}
         {account.isLoggedIn() || (
           <Box
             onClick={() => navigate("/signup")}
