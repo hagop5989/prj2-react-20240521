@@ -29,6 +29,13 @@ export function Navbar() {
           회원가입
         </Box>
         <Box
+          onClick={() => navigate("/member/list")}
+          cursor={"pointer"}
+          _hover={{ bgColor: "gray.200" }}
+        >
+          회원목록
+        </Box>
+        <Box
           onClick={() => navigate("/login")}
           cursor={"pointer"}
           _hover={{ bgColor: "gray.200" }}
@@ -36,11 +43,14 @@ export function Navbar() {
           로그인
         </Box>
         <Box
-          onClick={() => navigate("/member/list")}
+          onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/login");
+          }}
           cursor={"pointer"}
           _hover={{ bgColor: "gray.200" }}
         >
-          회원목록
+          로그아웃
         </Box>
       </Flex>
     </Box>
