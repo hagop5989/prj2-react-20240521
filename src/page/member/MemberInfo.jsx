@@ -51,7 +51,7 @@ export function MemberInfo() {
             description: "권한이 없습니다.",
             position: "top",
           });
-          navigate(-1); /* -1 은 이전화면 */
+          navigate(-1);
         }
       });
   }, []);
