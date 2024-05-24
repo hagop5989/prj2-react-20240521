@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -18,14 +18,15 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function BoardView() {
-  // dynamic segment
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const account = useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
     axios
@@ -34,7 +35,7 @@ export function BoardView() {
       .catch((err) => {
         if (err.response.status === 404) {
           toast({
-            status: "error",
+            status: "info",
             description: "해당 게시물이 존재하지 않습니다.",
             position: "top",
           });
@@ -46,12 +47,16 @@ export function BoardView() {
   function handleClickRemove() {
     axios
       .delete(`/api/board/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        /* 지울 때 토큰 들고가기 */
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
       .then(() => {
-        myToastMethod("success", `${id}번 게시물 정상 삭제되었습니다.`);
-
+        toast({
+          status: "success",
+          description: `${id}번 게시물이 삭제되었습니다.`,
+          position: "top",
+        });
         navigate("/");
       })
       .catch(() => {
@@ -61,20 +66,11 @@ export function BoardView() {
           position: "top",
         });
       })
-      .finally(() => onClose());
-
-    function myToastMethod(status, description) {
-      toast({
-        status: status,
-        description: description,
-        position: "top",
+      .finally(() => {
+        onClose();
       });
-    }
   }
 
-  /* DB의 값이 state 에 넘어오기 전에 랜더링 하여 null 오류 발생하는 경우 해결법*/
-  // board 가 null 일떄 return null or return <Spinner /> -> 로딩 느낌나게 함.
-  // board state 의 useState({})로 빈 객체 설정
   if (board === null) {
     return <Spinner />;
   }
@@ -83,57 +79,53 @@ export function BoardView() {
     <Box>
       <Box>{board.id}번 게시물</Box>
       <Box>
-        <Box>
-          <FormControl>
-            <FormLabel>제목</FormLabel>
-            <Input value={board.title} readOnly={true}></Input>
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>본문</FormLabel>
-            <Textarea value={board.content} readOnly />
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>작성자</FormLabel>
-            <Input value={board.writer} readOnly />
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl>
-            <FormLabel>작성일시</FormLabel>
-            <Input type={"datetime-local"} value={board.inserted} readOnly />
-          </FormControl>
-        </Box>
-        <Button
-          colorScheme={"purple"}
-          onClick={() => {
-            navigate(`/edit/${board.id}`);
-          }}
-        >
-          수정
-        </Button>
-        <Button colorScheme={"red"} onClick={onOpen}>
-          삭제
-        </Button>
+        <FormControl>
+          <FormLabel>제목</FormLabel>
+          <Input value={board.title} readOnly />
+        </FormControl>
       </Box>
+      <Box>
+        <FormControl>
+          <FormLabel>본문</FormLabel>
+          <Textarea value={board.content} readOnly />
+        </FormControl>
+      </Box>
+      <Box>
+        <FormControl>
+          <FormLabel>작성자</FormLabel>
+          <Input value={board.writer} readOnly />
+        </FormControl>
+      </Box>
+      <Box>
+        <FormControl>작성일시</FormControl>
+        <Input type={"datetime-local"} value={board.inserted} readOnly />
+      </Box>
+      {account.hasAccess(board.memberId) && (
+        <Box>
+          <Button
+            colorScheme={"purple"}
+            onClick={() => navigate(`/edit/${board.id}`)}
+          >
+            수정
+          </Button>
+          <Button colorScheme={"red"} onClick={onOpen}>
+            삭제
+          </Button>
+        </Box>
+      )}
+
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay>
-          <ModalContent>
-            <ModalHeader>삭제</ModalHeader>
-            <ModalBody>
-              삭제하시겠습니까?
-              <ModalFooter>
-                <Button onClick={onClose}>취소</Button>
-                <Button colorScheme={"red"} onClick={handleClickRemove}>
-                  확인
-                </Button>
-              </ModalFooter>
-            </ModalBody>
-          </ModalContent>
-        </ModalOverlay>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader></ModalHeader>
+          <ModalBody>삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>취소</Button>
+            <Button colorScheme={"red"} onClick={handleClickRemove}>
+              확인
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </Box>
   );
