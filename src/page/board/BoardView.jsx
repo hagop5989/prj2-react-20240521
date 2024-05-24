@@ -45,7 +45,10 @@ export function BoardView() {
 
   function handleClickRemove() {
     axios
-      .delete(`/api/board/${id}`)
+      .delete(`/api/board/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        /* 지울 때 토큰 들고가기 */
+      })
       .then(() => {
         myToastMethod("success", `${id}번 게시물 정상 삭제되었습니다.`);
 
