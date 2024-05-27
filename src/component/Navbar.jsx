@@ -8,11 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
   return (
     <Box>
       <Flex gap={3}>
         <Box
-          onClick={() => navigate("/")}
+          onClick={() => {
+            navigate("/");
+          }}
           cursor={"pointer"}
           _hover={{ bgColor: "gray.200" }}
         >
