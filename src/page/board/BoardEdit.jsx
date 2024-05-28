@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  Badge,
   Box,
   Button,
   Flex,
@@ -23,17 +24,18 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardEdit() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
   const [removeFileList, setRemoveFileList] = useState([]);
-  const [addfileList, setAddfileList] = useState([]);
+  const [addFileList, setAddFileList] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
+
   useEffect(() => {
     axios.get(`/api/board/${id}`).then((res) => setBoard(res.data));
   }, []);
@@ -45,11 +47,12 @@ export function BoardEdit() {
         title: board.title,
         content: board.content,
         removeFileList,
+        addFileList,
       })
       .then(() => {
         toast({
           status: "success",
-          description: `${board.id}번 게시물이 수정 되었습니다.`,
+          description: `${board.id}번 게시물이 수정되었습니다.`,
           position: "top",
         });
         navigate(`/board/${board.id}`);
@@ -58,8 +61,8 @@ export function BoardEdit() {
         if (err.response.status === 400) {
           toast({
             status: "error",
-            description:
-              "게시물이 수정되지 않았습니다. 작성 내용을 확인해주세요.",
+            description: `게시물이 수정되지 않았습니다. 작성한 내용을 확인해주세요.`,
+            position: "top",
           });
         }
       })
@@ -73,8 +76,21 @@ export function BoardEdit() {
   }
 
   const fileNameList = [];
-  for (let addFile of addfileList) {
-    fileNameList.push(<li>{addFile.name}</li>);
+  for (let addFile of addFileList) {
+    // 이미 있는 파일과 중복된 파일명인지?
+    let duplicate = false;
+    for (let file of board.fileList) {
+      if (file.name === addFile.name) {
+        duplicate = true;
+        break;
+      }
+    }
+    fileNameList.push(
+      <li>
+        {addFile.name}
+        {duplicate && <Badge colorScheme="red">override</Badge>}
+      </li>,
+    );
   }
 
   function handleRemoveSwitchChange(name, checked) {
@@ -84,7 +100,6 @@ export function BoardEdit() {
       setRemoveFileList(removeFileList.filter((item) => item !== name));
     }
   }
-  // console.log(removeFileList);
 
   return (
     <Box>
@@ -93,7 +108,6 @@ export function BoardEdit() {
         <Box>
           <FormControl>
             <FormLabel>제목</FormLabel>
-            {/*원래 있던것 세팅하고 바뀐 부분은 새 값을 넣음, 새 객체*/}
             <Input
               defaultValue={board.title}
               onChange={(e) => setBoard({ ...board, title: e.target.value })}
@@ -106,7 +120,7 @@ export function BoardEdit() {
             <Textarea
               defaultValue={board.content}
               onChange={(e) => setBoard({ ...board, content: e.target.value })}
-            />
+            ></Textarea>
           </FormControl>
         </Box>
         <Box>
@@ -120,16 +134,18 @@ export function BoardEdit() {
                       handleRemoveSwitchChange(file.name, e.target.checked)
                     }
                   />
-                  <Text> {file.name} </Text>
+                  <Text>{file.name}</Text>
                 </Flex>
-                <Image
-                  sx={
-                    removeFileList.includes(file.name)
-                      ? { filter: "blur(8px)" }
-                      : {}
-                  }
-                  src={file.src}
-                />
+                <Box>
+                  <Image
+                    sx={
+                      removeFileList.includes(file.name)
+                        ? { filter: "blur(8px)" }
+                        : {}
+                    }
+                    src={file.src}
+                  />
+                </Box>
               </Box>
             ))}
         </Box>
@@ -137,13 +153,13 @@ export function BoardEdit() {
           <FormControl>
             <FormLabel>파일</FormLabel>
             <Input
-              multiple={true} /*여러파일선택 - 기본값이 true, 생략가능*/
-              type="file" /* 파일 입력 */
-              accept="image/*" /*이미지만 가능 */
-              onChange={(e) => setAddfileList(e.target.files)}
+              multiple
+              type="file"
+              accept="image/*"
+              onChange={(e) => setAddFileList(e.target.files)}
             />
             <FormHelperText>
-              총용량은 10MB , 한 파일은 1MB를 초과할 수 없습니다
+              총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
             </FormHelperText>
           </FormControl>
         </Box>
@@ -156,23 +172,23 @@ export function BoardEdit() {
             <Input defaultValue={board.writer} readOnly />
           </FormControl>
         </Box>
-        <Button onClick={onOpen} colorScheme={"blue"}>
-          저장
-        </Button>
+        <Box>
+          <Button colorScheme={"blue"} onClick={onOpen}>
+            저장
+          </Button>
+        </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>수정</ModalHeader>
-          <ModalBody>
-            수정하시겠습니까?
-            <ModalFooter>
-              <Button onClick={onClose}>취소</Button>
-              <Button colorScheme={"blue"} onClick={handleClickSave}>
-                확인
-              </Button>
-            </ModalFooter>
-          </ModalBody>
+          <ModalHeader></ModalHeader>
+          <ModalBody>저장하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={handleClickSave} colorScheme={"blue"}>
+              확인
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>
