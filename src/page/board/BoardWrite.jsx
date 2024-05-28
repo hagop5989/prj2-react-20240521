@@ -63,7 +63,7 @@ export function BoardWrite() {
   // file 목록 작성
   const fileNameList = [];
   for (let i = 0; i < files.length; i++) {
-    fileNameList.push(<li>{files[i].name}</li>);
+    fileNameList.push(<li key={files[i].name}>{files[i].name}</li>);
   }
 
   return (

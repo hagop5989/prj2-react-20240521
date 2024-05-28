@@ -4,6 +4,7 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Image,
@@ -15,14 +16,19 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Switch,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardEdit() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+  const [removeFileList, setRemoveFileList] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -32,10 +38,11 @@ export function BoardEdit() {
 
   function handleClickSave() {
     axios
-      .put("/api/board/edit", board, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      .putForm("/api/board/edit", {
+        id: board.id,
+        title: board.title,
+        content: board.content,
+        removeFileList,
       })
       .then(() => {
         toast({
@@ -63,6 +70,15 @@ export function BoardEdit() {
     return <Spinner />;
   }
 
+  function handleRemoveSwitchChange(name, checked) {
+    if (checked) {
+      setRemoveFileList([...removeFileList, name]);
+    } else {
+      setRemoveFileList(removeFileList.filter((item) => item !== name));
+    }
+  }
+  // console.log(removeFileList);
+
   return (
     <Box>
       <Box>{board.id}번 게시물 수정</Box>
@@ -74,7 +90,7 @@ export function BoardEdit() {
             <Input
               defaultValue={board.title}
               onChange={(e) => setBoard({ ...board, title: e.target.value })}
-            ></Input>
+            />
           </FormControl>
         </Box>
         <Box>
@@ -87,10 +103,26 @@ export function BoardEdit() {
           </FormControl>
         </Box>
         <Box>
-          {board.files &&
-            board.files.map((file) => (
+          {board.fileList &&
+            board.fileList.map((file) => (
               <Box border={"2px solid black"} m={3} key={file.name}>
-                <Image src={file.src} />
+                <Flex>
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  <Switch
+                    onChange={(e) =>
+                      handleRemoveSwitchChange(file.name, e.target.checked)
+                    }
+                  />
+                  <Text> {file.name} </Text>
+                </Flex>
+                <Image
+                  sx={
+                    removeFileList.includes(file.name)
+                      ? { filter: "blur(8px)" }
+                      : {}
+                  }
+                  src={file.src}
+                />
               </Box>
             ))}
         </Box>
