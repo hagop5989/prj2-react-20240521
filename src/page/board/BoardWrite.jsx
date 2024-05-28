@@ -24,18 +24,11 @@ export function BoardWrite() {
   function handleSaveClick() {
     setLoading(true);
     axios
-      .post(
-        "/api/board/add",
-        {
-          title,
-          content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      )
+      .postForm("/api/board/add", {
+        title,
+        content,
+        files /*string number array object null 형식은 json으로 가능하지만 file은 불가*/,
+      })
       .then(() => {
         toast({
           description: "새 글이 등록되었습니다.",
