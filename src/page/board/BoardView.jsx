@@ -30,11 +30,14 @@ import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
-  const account = useContext(LoginContext);
+
   const [like, setLike] = useState({
     like: false,
     count: 0,
   });
+
+  const [isLikeProcessing, setIsLikeProcessing] = useState(false);
+  const account = useContext(LoginContext);
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -42,7 +45,10 @@ export function BoardView() {
   useEffect(() => {
     axios
       .get(`/api/board/${id}`)
-      .then((res) => setBoard(res.data))
+      .then((res) => {
+        setBoard(res.data.board);
+        setLike(res.data.like);
+      })
       .catch((err) => {
         if (err.response.status === 404) {
           toast({
@@ -82,23 +88,39 @@ export function BoardView() {
     return <Spinner />;
   }
 
+  function handleClickLike() {
+    setIsLikeProcessing(true);
+    axios
+      .put(`/api/board/like`, { boardId: board.id })
+      .then((res) => {
+        setLike(res.data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setIsLikeProcessing(false);
+      });
+  }
+
   return (
     <Box>
-      <Heading>
-        <Flex>
-          <Box>{board.id}번 게시물</Box>
-          <Spacer />
-          <Box
-            onClick={() => setLike({ ...like, like: !like.like })}
-            cursor="pointer"
-            fontSize="3xl"
-          >
-            {like.like && <FontAwesomeIcon icon={fullHeart} />}
-            {like.like || <FontAwesomeIcon icon={emptyHeart} />}
+      <Flex>
+        <Heading>{board.id}번 게시물</Heading>
+        <Spacer />
+        {isLikeProcessing || (
+          <Flex>
+            <Box onClick={handleClickLike} cursor="pointer" fontSize="3xl">
+              {like.like && <FontAwesomeIcon icon={fullHeart} />}
+              {like.like || <FontAwesomeIcon icon={emptyHeart} />}
+            </Box>
+            <Box fontSize="3xl">{like.count}</Box>
+          </Flex>
+        )}
+        {isLikeProcessing && (
+          <Box pr={3}>
+            <Spinner />
           </Box>
-          <Box fontSize={"3xl"}>{like.count}</Box>
-        </Flex>
-      </Heading>
+        )}
+      </Flex>
       <Box>
         <FormControl>
           <FormLabel>제목</FormLabel>
