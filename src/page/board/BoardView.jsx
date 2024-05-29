@@ -1,11 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
+  Heading,
   Image,
   Input,
   Modal,
@@ -14,17 +16,25 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
   Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as fullHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as emptyHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardView() {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
   const account = useContext(LoginContext);
+  const [like, setLike] = useState({
+    like: false,
+    count: 0,
+  });
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -74,7 +84,21 @@ export function BoardView() {
 
   return (
     <Box>
-      <Box>{board.id}번 게시물</Box>
+      <Heading>
+        <Flex>
+          <Box>{board.id}번 게시물</Box>
+          <Spacer />
+          <Box
+            onClick={() => setLike({ ...like, like: !like.like })}
+            cursor="pointer"
+            fontSize="3xl"
+          >
+            {like.like && <FontAwesomeIcon icon={fullHeart} />}
+            {like.like || <FontAwesomeIcon icon={emptyHeart} />}
+          </Box>
+          <Box fontSize={"3xl"}>{like.count}</Box>
+        </Flex>
+      </Heading>
       <Box>
         <FormControl>
           <FormLabel>제목</FormLabel>

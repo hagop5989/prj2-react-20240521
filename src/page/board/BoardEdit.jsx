@@ -86,7 +86,7 @@ export function BoardEdit() {
       }
     }
     fileNameList.push(
-      <li>
+      <li key={addFile.name}>
         {addFile.name}
         {duplicate && <Badge colorScheme="red">override</Badge>}
       </li>,
