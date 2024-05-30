@@ -11,8 +11,8 @@ export function CommentList({ boardId, isSending }) {
         .then((res) => {
           setCommentList(res.data);
         })
-        .catch((res) => {})
-        .finally((res) => {});
+        .catch(() => {})
+        .finally(() => {});
     }
   }, [isSending]);
 
