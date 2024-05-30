@@ -39,6 +39,7 @@ export function CommentWrite({ boardId, isSending, setIsSending }) {
         }}
       />
       <Button
+        isDisabled={comment.trim().length === 0}
         isLoading={isSending}
         onClick={handleCommentSubmitClick}
         colorScheme={"blue"}
