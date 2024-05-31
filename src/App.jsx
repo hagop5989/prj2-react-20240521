@@ -13,9 +13,8 @@ import { MemberEdit } from "./page/member/MemberEdit.jsx";
 import { MemberLogin } from "./page/member/MemberLogin.jsx";
 import { LoginProvider } from "./component/LoginProvider.jsx";
 import axios from "axios";
-import { CommentEdit } from "./component/comment/CommentEdit.jsx";
 
-//axios 설정
+// axios interceptor 설정
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -29,16 +28,18 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
     children: [
-      { index: true, element: <BoardList /> },
+      {
+        index: true,
+        element: <BoardList />,
+      },
       { path: "write", element: <BoardWrite /> },
       { path: "board/:id", element: <BoardView /> },
       { path: "edit/:id", element: <BoardEdit /> },
       { path: "signup", element: <MemberSignup /> },
       { path: "member/list", element: <MemberList /> },
       { path: "member/:id", element: <MemberInfo /> },
-      { path: "/member/edit/:id", element: <MemberEdit /> },
+      { path: "member/edit/:id", element: <MemberEdit /> },
       { path: "login", element: <MemberLogin /> },
-      { path: "/board/:id", element: <CommentEdit /> },
     ],
   },
 ]);

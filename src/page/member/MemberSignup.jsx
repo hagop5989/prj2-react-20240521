@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import axios from "axios";
+import { customAxios as axios } from "../../axiosInstance.jsx";
 import { useNavigate } from "react-router-dom";
 
 export function MemberSignup() {
@@ -32,7 +32,7 @@ export function MemberSignup() {
     setIsLoading(true);
     axios
       .post("/api/member/signup", { email, password, nickName })
-      .then(() => {
+      .then((res) => {
         toast({
           status: "success",
           description: "회원 가입이 완료되었습니다.",
@@ -140,17 +140,16 @@ export function MemberSignup() {
   return (
     <Center>
       <Box w={500}>
-        <Box my={10}>
+        <Box mb={10}>
           <Heading>회원 가입</Heading>
         </Box>
         <Box>
-          <Box>
-            <FormControl mb={7}>
+          <Box mb={7}>
+            <FormControl>
               <FormLabel>이메일</FormLabel>
               <InputGroup>
                 <Input
                   type={"email"}
-                  value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setIsCheckedEmail(false);
@@ -177,14 +176,14 @@ export function MemberSignup() {
               )}
             </FormControl>
           </Box>
-          <Box>
-            <FormControl mb={7}>
+          <Box mb={7}>
+            <FormControl>
               <FormLabel>암호</FormLabel>
               <Input onChange={(e) => setPassword(e.target.value)} />
             </FormControl>
           </Box>
-          <Box>
-            <FormControl mb={7}>
+          <Box mb={7}>
+            <FormControl>
               <FormLabel>암호확인</FormLabel>
               <Input onChange={(e) => setPasswordCheck(e.target.value)} />
               {isCheckedPassword || (
@@ -192,8 +191,8 @@ export function MemberSignup() {
               )}
             </FormControl>
           </Box>
-          <Box>
-            <FormControl mb={7}>
+          <Box mb={7}>
+            <FormControl>
               <FormLabel>별명</FormLabel>
               <InputGroup>
                 <Input
@@ -218,7 +217,7 @@ export function MemberSignup() {
               )}
             </FormControl>
           </Box>
-          <Box>
+          <Box mb={7}>
             <Button
               isLoading={isLoading}
               colorScheme={"blue"}

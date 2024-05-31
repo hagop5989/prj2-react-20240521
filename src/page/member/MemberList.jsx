@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Box,
+  Heading,
   Spinner,
   Table,
   Tbody,
@@ -9,7 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { customAxios as axios } from "../../axiosInstance.jsx";
 import { useNavigate } from "react-router-dom";
 
 export function MemberList() {
@@ -17,40 +18,38 @@ export function MemberList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("/api/member/list").then((res) => {
-      setMemberList(res.data);
-    });
+    axios.get("/api/member/list").then((res) => setMemberList(res.data));
   }, []);
 
-  /*빈 dependency 가 있어야 1번만 실행됨 */
   if (memberList.length === 0) {
     return <Spinner />;
   }
-
   return (
     <Box>
-      <Box>회원목록</Box>
-      <Box>
+      <Box mb={10}>
+        <Heading>회원 목록</Heading>
+      </Box>
+      <Box mb={10}>
         <Table>
           <Thead>
             <Tr>
-              <Th>#</Th>
-              <Th>별명</Th>
+              <Th w={20}>#</Th>
               <Th>이메일</Th>
-              <Th>가입일시</Th>
+              <Th w={"150px"}>별명</Th>
+              <Th w={96}>가입일시</Th>
             </Tr>
           </Thead>
           <Tbody>
             {memberList.map((member) => (
               <Tr
                 cursor={"pointer"}
-                _hover={{ bgColor: "gray.200 " }}
+                _hover={{ bgColor: "gray.200" }}
                 onClick={() => navigate(`/member/${member.id}`)}
                 key={member.id}
               >
                 <Td>{member.id}</Td>
-                <Td>{member.nickName}</Td>
                 <Td>{member.email}</Td>
+                <Td>{member.nickName}</Td>
                 <Td>{member.signupDateAndTime}</Td>
               </Tr>
             ))}

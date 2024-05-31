@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import axios from "axios";
+import { customAxios as axios } from "../../axiosInstance.jsx";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 
@@ -28,14 +28,14 @@ export function MemberLogin() {
 
         toast({
           status: "success",
-          description: "로그인 되었습니다",
+          description: "로그인 되었습니다.",
           position: "top",
         });
         navigate("/");
       })
       .catch(() => {
-        /* 로그인 실패 시 토큰 지우기 */
         account.logout();
+
         toast({
           status: "warning",
           description: "이메일과 패스워드를 확인해주세요.",
@@ -43,28 +43,31 @@ export function MemberLogin() {
         });
       });
   }
+
   return (
     <Center>
       <Box w={500}>
-        <Box my={10}>
+        <Box mb={10}>
           <Heading>로그인</Heading>
         </Box>
         <Box>
-          <FormControl mb={7}>
-            <FormLabel>이메일</FormLabel>
-            <Input onChange={(e) => setEmail(e.target.value)} />
-          </FormControl>
-        </Box>
-        <Box>
-          <FormControl mb={7}>
-            <FormLabel>암호</FormLabel>
-            <Input onChange={(e) => setPassword(e.target.value)} />
-          </FormControl>
-        </Box>
-        <Box mb={7}>
-          <Button onClick={handleLogin} colorScheme={"blue"}>
-            로그인
-          </Button>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>이메일</FormLabel>
+              <Input onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+          </Box>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>암호</FormLabel>
+              <Input onChange={(e) => setPassword(e.target.value)} />
+            </FormControl>
+          </Box>
+          <Box mb={7}>
+            <Button onClick={handleLogin} colorScheme={"blue"}>
+              로그인
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Center>

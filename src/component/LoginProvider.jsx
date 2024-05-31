@@ -8,6 +8,7 @@ export function LoginProvider({ children }) {
   const [nickName, setNickName] = useState("");
   const [expired, setExpired] = useState(0);
   const [authority, setAuthority] = useState([]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token === null) {
@@ -19,12 +20,11 @@ export function LoginProvider({ children }) {
   // isLoggedIn
   function isLoggedIn() {
     return Date.now() < expired * 1000;
-    // js는 밀리세컨드까지 표현되어 * 1000하여 맞춤
   }
 
   // 권한 있는 지? 확인
   function hasAccess(param) {
-    return id == param; // 느슨한 비교( number string 간에도 같은 것으로)
+    return id == param;
   }
 
   function isAdmin() {

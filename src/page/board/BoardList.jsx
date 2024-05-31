@@ -20,7 +20,6 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faComments,
   faHeart,
   faImages,
   faMagnifyingGlass,
@@ -29,6 +28,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { faComments } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -37,6 +37,7 @@ export function BoardList() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
   useEffect(() => {
     axios.get(`/api/board/list?${searchParams}`).then((res) => {
       setBoardList(res.data.boardList);
@@ -72,9 +73,10 @@ export function BoardList() {
 
   return (
     <Box>
-      <Heading my={10}>게시물 목록</Heading>
-      {/*Heading : 제목 */}
-      <Box>
+      <Box mb={10}>
+        <Heading>게시물 목록</Heading>
+      </Box>
+      <Box mb={10}>
         {boardList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
         {boardList.length > 0 && (
           <Table>
@@ -104,15 +106,23 @@ export function BoardList() {
                   <Td>
                     {board.title}
                     {board.numberOfImages > 0 && (
-                      <Badge>
-                        <FontAwesomeIcon icon={faImages} />
-                        {board.numberOfImages}
+                      <Badge ml={2}>
+                        <Flex gap={1}>
+                          <Box>
+                            <FontAwesomeIcon icon={faImages} />
+                          </Box>
+                          <Box>{board.numberOfImages}</Box>
+                        </Flex>
                       </Badge>
                     )}
                     {board.numberOfComments > 0 && (
-                      <Badge>
-                        <FontAwesomeIcon icon={faComments} />
-                        {board.numberOfComments}
+                      <Badge ml={2}>
+                        <Flex gap={1}>
+                          <Box>
+                            <FontAwesomeIcon icon={faComments} />
+                          </Box>
+                          <Box>{board.numberOfComments}</Box>
+                        </Flex>
                       </Badge>
                     )}
                   </Td>
@@ -125,7 +135,7 @@ export function BoardList() {
         )}
       </Box>
       <Center mb={10}>
-        <Flex mt={3}>
+        <Flex gap={1}>
           <Box>
             <Select
               value={searchType}
@@ -136,14 +146,14 @@ export function BoardList() {
               <option value="nickName">작성자</option>
             </Select>
           </Box>
-          <Box ml={1}>
+          <Box>
             <Input
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
               placeholder="검색어"
             />
           </Box>
-          <Box ml={1}>
+          <Box>
             <Button onClick={handleSearchClick}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </Button>
@@ -151,7 +161,7 @@ export function BoardList() {
         </Flex>
       </Center>
       <Center>
-        <Flex gap={1} mb={40}>
+        <Flex gap={1}>
           {pageInfo.prevPageNumber && (
             <>
               <Button onClick={() => handlePageButtonClick(1)}>
