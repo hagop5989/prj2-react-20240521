@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Flex,
+  Heading,
   Input,
   Select,
   Table,
@@ -71,19 +72,20 @@ export function BoardList() {
 
   return (
     <Box>
-      <Box>게시물 목록</Box>
+      <Heading my={10}>게시물 목록</Heading>
+      {/*Heading : 제목 */}
       <Box>
         {boardList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
         {boardList.length > 0 && (
           <Table>
             <Thead>
               <Tr>
-                <Th>#</Th>
+                <Th w={20}>#</Th>
                 <Th>TITLE</Th>
-                <Th>
+                <Th w={20}>
                   <FontAwesomeIcon icon={faHeart} />
                 </Th>
-                <Th>
+                <Th w={40}>
                   <FontAwesomeIcon icon={faUserPen} />
                 </Th>
               </Tr>
@@ -122,8 +124,8 @@ export function BoardList() {
           </Table>
         )}
       </Box>
-      <Center>
-        <Flex>
+      <Center mb={10}>
+        <Flex mt={3}>
           <Box>
             <Select
               value={searchType}
@@ -134,14 +136,14 @@ export function BoardList() {
               <option value="nickName">작성자</option>
             </Select>
           </Box>
-          <Box>
+          <Box ml={1}>
             <Input
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
               placeholder="검색어"
             />
           </Box>
-          <Box>
+          <Box ml={1}>
             <Button onClick={handleSearchClick}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </Button>
@@ -149,43 +151,45 @@ export function BoardList() {
         </Flex>
       </Center>
       <Center>
-        {pageInfo.prevPageNumber && (
-          <>
-            <Button onClick={() => handlePageButtonClick(1)}>
-              <FontAwesomeIcon icon={faAnglesLeft} />
-            </Button>
+        <Flex gap={1} mb={40}>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Button onClick={() => handlePageButtonClick(1)}>
+                <FontAwesomeIcon icon={faAnglesLeft} />
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </Button>
+            </>
+          )}
+          {pageNumbers.map((pageNumber) => (
             <Button
-              onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              onClick={() => handlePageButtonClick(pageNumber)}
+              key={pageNumber}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
+              }
             >
-              <FontAwesomeIcon icon={faAngleLeft} />
+              {pageNumber}
             </Button>
-          </>
-        )}
-        {pageNumbers.map((pageNumber) => (
-          <Button
-            onClick={() => handlePageButtonClick(pageNumber)}
-            key={pageNumber}
-            colorScheme={
-              pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
-            }
-          >
-            {pageNumber}
-          </Button>
-        ))}
-        {pageInfo.nextPageNumber && (
-          <>
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAngleRight} />
-            </Button>
-            <Button
-              onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-            >
-              <FontAwesomeIcon icon={faAnglesRight} />
-            </Button>
-          </>
-        )}
+          ))}
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </Button>
+            </>
+          )}
+        </Flex>
       </Center>
     </Box>
   );

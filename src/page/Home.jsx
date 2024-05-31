@@ -11,7 +11,7 @@ export function Home() {
           base: 0,
           lg: 200,
         }}
-        mt={20}
+        mt={7}
       >
         <Navbar />
         <Box>
