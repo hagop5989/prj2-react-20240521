@@ -6,11 +6,17 @@ import { Navbar } from "../component/Navbar.jsx";
 export function Home() {
   return (
     <Box>
-      <Box>
+      <Box
+        mx={{
+          base: 0,
+          lg: 200,
+        }}
+        mt={20}
+      >
         <Navbar />
-      </Box>
-      <Box>
-        <Outlet />
+        <Box>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );
